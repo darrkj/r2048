@@ -7,7 +7,8 @@ start[inits] <- 2
 
 board <- matrix(start, 4, 4)
 
-
+rows <- function(fun) apply(b, 1, fun)
+cols <- function(fun) apply(b, 2, fun)
 
 print_board <- function(b) {
   for(i in seq(4)) {
@@ -36,18 +37,18 @@ valid_move <- function(b, dir) {
 }
 
 
-ind3 <- function(x) {
+two_in_order <- function(x) {
   x[1] == x[2] & x[1] != 0 |
     x[2] == x[3] & x[2] != 0 |
     x[3] == x[4] & x[3] != 0
 }
 
 
-valid_move2 <- function(b, dir) {
-  dir == 'd' & any(apply(b, 2, ind3)) |
-    dir == 'u' & any(apply(b, 2, ind3)) |   
-    dir == 'l' & any(apply(b, 1, ind3)) |
-    dir == 'r' & any(apply(b, 1, ind3))
+condense <- function(b, dir) {
+  dir == 'd' & any(apply(b, 2, two_in_order)) |
+    dir == 'u' & any(apply(b, 2, two_in_order)) |   
+    dir == 'l' & any(apply(b, 1, two_in_order)) |
+    dir == 'r' & any(apply(b, 1, two_in_order))
 }
 
 # If there are no valid moves it is game over.
@@ -98,7 +99,7 @@ move <- function(b, dir) {
 
 
 agg <- function(b, dir) {
-  if(valid_move(b, dir) | valid_move2(b, dir)) {
+  if(valid_move(b, dir) | condense(b, dir)) {
     b <- move(b, dir)
     b <- if(dir == 'd') apply(b, 2, ind)
     else if (dir == 'u') apply(b, 2, ind2)
@@ -124,10 +125,7 @@ play <- function(b) {
 }
 
 
-# move(board, 'd')
-# move(board, 'u')
-# move(board, 'l')
-# move(board, 'r')
+
 
 
 play(board)
